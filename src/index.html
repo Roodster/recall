@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Exam Creator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="stats-bar">
+        <div>Correct Answers: <span id="statsText">0/0</span></div>
+        <div class="progress-container">
+            <div class="progress-bar" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <div id="app">
+        <div class="header">
+            <h1>Mock Exam Questions</h1>
+        </div>
+
+        <div id="questionsContainer"></div>
+
+        <div style="text-align: center;">
+            <button onclick="addQuestion()" class="btn btn-blue add-question-btn">
+                <i data-lucide="plus-circle"></i>
+                Add Question
+            </button>
+        </div>
+
+        <div class="file-input-container">
+            <button onclick="downloadQuestions()" class="btn btn-blue btn-icon">
+                <i data-lucide="download"></i>
+            </button>
+            <label for="fileInput" class="btn btn-blue btn-icon file-label">
+                <i data-lucide="upload"></i>
+            </label>
+            <input type="file" id="fileInput" onchange="uploadQuestions()" />
+        </div>
+    </div>
+
+
+    <div id="errorMessage" class="error-message hidden">File loading error: Invalid JSON format.</div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script> -->
+    <script src="script.js"></script>
+</body>
+</html>

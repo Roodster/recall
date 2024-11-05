@@ -4,8 +4,7 @@ Web application to create practice questions and test your recall.
 
 ### TO DO
 
-[] Fix json file download
-[] Fix status bar progress update
-[] Fix collapse of questions
-[] Fix button symbols 
-[] Fix layout and styling. 
+[] Fix layout and styling of buttons. 
+[] Use localstorage to not remove questions on browser close
+[] lightmode / dark mode
+[] Add topic headers

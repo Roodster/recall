@@ -1,218 +1,90 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Helvetica, Arial, sans-serif;
+/* Base Variables for Light Theme */
+:root {
+    --background-color: #333;
+    --text-color: #f5f5f5;
+    --header-bg-color: #444;
+    --error-bg-color: #d32f2f;
+    --error-text-color: #ffffff;
+    --progress-bg-color: #555;
+    --progress-bar-color: #66bb6a;
+    --question-bg-color: #444;
+    --question-border-color: #555;
+    --button-blue-bg-color: #1e88e5;
+    --button-red-bg-color: #c62828;
+    --checkbox-border-color: #bbb;
+    --checkbox-checked-bg-color: #66bb6a;
+
+/* Dark Mode Variables */
+.dark-mode {
+    --background-color: #f5f5f5;
+    --text-color: #333;
+    --header-bg-color: #ffffff;
+    --error-bg-color: #f44336;
+    --error-text-color: #ffffff;
+    --progress-bg-color: #e0e0e0;
+    --progress-bar-color: #4CAF50;
+    --question-bg-color: #ffffff;
+    --question-border-color: #ddd;
+    --button-blue-bg-color: #2196F3;
+    --button-red-bg-color: #f44336;
+    --checkbox-border-color: #ddd;
+    --checkbox-checked-bg-color: #4CAF50;
+}
 }
 
+/* Apply Variables */
 body {
-    background: #f5f5f5;
+    background-color: var(--background-color);
+    color: var(--text-color);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-#app {
-    width: 100%;
-    max-width: 75%; /* Increased to take up more horizontal space */
-    padding: 20px;
-}
-
-.header {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
 .error-message {
-    background-color: #f44336;
-    color: white;
-    padding: 10px;
-    text-align: center;
-    border-radius: 4px;
-    margin-bottom: 15px;
+    background-color: var(--error-bg-color);
+    color: var(--error-text-color);
 }
 
-.hidden {
-    display: none;
-}
-
+/* Other elements using variables */
 .stats-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: white;
-    padding: 15px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    text-align: center;
-    z-index: 1000;
+    background: var(--header-bg-color);
 }
 
 .progress-container {
-    width: 200px;
-    height: 8px;
-    background: #e0e0e0;
-    border-radius: 4px;
-    margin: 10px auto;
-    overflow: hidden;
+    background: var(--progress-bg-color);
 }
 
 .progress-bar {
-    height: 100%;
-    background: #4CAF50;
-    transition: width 0.3s ease;
+    background: var(--progress-bar-color);
 }
 
 .question {
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 30px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background: var(--question-bg-color);
+    border: 1px solid var(--question-border-color);
 }
 
-.question input[type="text"] {
-    width: 90%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    font-size: 16px;
-}
-
-.answers {
-    margin: 20px 0;
-    padding-left: 20px;
-}
-
-.answer-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    gap: 10px;
-}
-
-.answer-row input[type="text"] {
-    flex: 1; /* Expands text box width */
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-.btn {
-    border: none;
-    border-radius: 4px;
-    padding: 8px 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 14px;
-    transition: opacity 0.2s;
-}
-
-.btn:hover {
-    opacity: 0.9;
+.question input[type="text"], .answer-row input[type="text"] {
+    border: 1px solid var(--question-border-color);
 }
 
 .btn-blue {
-    background: #2196F3;
+    background: var(--button-blue-bg-color);
     color: white;
 }
 
 .btn-red {
-    background: #f44336;
+    background: var(--button-red-bg-color);
     color: white;
-}
-
-.btn-icon {
-    width: 36px;
-    height: 36px;
-    padding: 8px;
-    border-radius: 50%;
-}
-
-.add-question-btn {
-    font-size: 16px;
-    padding: 12px 24px;
-    margin: 20px 0;
-
-}
-
-/* Styling for the red circular delete button with garbage can icon */
-.delete-btn {
-    background: #f44336;
-    color: white;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 18px;
-    transition: opacity 0.2s;
-    margin-left: auto; /* Aligns delete button to the right in answer rows */
-}
-
-.delete-btn:hover {
-    opacity: 0.8;
 }
 
 .correctness-checkbox {
-    appearance: none;
-    width: 24px;
-    height: 24px;
-    border: 2px solid #ddd;
-    border-radius: 4px;
-    cursor: pointer;
-    position: relative;
-    transition: all 0.2s;
-    margin-right: 10px; /* Adds spacing for checkbox alignment */
+    border-color: var(--checkbox-border-color);
 }
 
 .correctness-checkbox:checked {
-    background: #4CAF50;
-    border-color: #4CAF50;
+    background: var(--checkbox-checked-bg-color);
+    border-color: var(--checkbox-checked-bg-color);
 }
 
-.correctness-checkbox:checked::after {
-    content: '✓';
-    color: white;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.file-input-container {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-#fileInput {
-    display: none;
-}
-
-.file-label {
-    cursor: pointer;
-}
-
-/* Aligning delete button to the right of answer rows */
-.answer-row {
-    gap: 10px;
-    display: flex;
-    align-items: center;
-}
-
-.answer-row .delete-btn {
-    margin-left: 10px; /* Ensures delete button aligns with the start of the text input */
-}
-
-.answer-row .correctness-checkbox {
-    margin-top: 2px; /* Aligns checkbox to be in line with the text input */
-}

@@ -13,6 +13,8 @@
         <div class="progress-container">
             <div class="progress-bar" style="width: 0%"></div>
         </div>
+        <button onclick="toggleDarkMode()" class="btn btn-blue">Toggle Dark Mode</button>
+
     </div>
 
     <div id="app">
@@ -23,25 +25,22 @@
         <div id="questionsContainer"></div>
 
         <div style="text-align: center;">
+
             <button onclick="addQuestion()" class="btn btn-blue add-question-btn">
                 <i data-lucide="plus-circle"></i>
                 Add Question
             </button>
+
         </div>
 
-        <div class="file-input-container">
-            <button onclick="downloadQuestions()" class="btn btn-blue btn-icon">
-                <i data-lucide="download"></i>
-            </button>
-            <label for="fileInput" class="btn btn-blue btn-icon file-label">
-                <i data-lucide="upload"></i>
-            </label>
-            <input type="file" id="fileInput" onchange="uploadQuestions()" />
+        </div>
+            <div id="topics-container"></div>
+            <button onclick="downloadQuestions()" class="btn btn-blue">Download JSON</button>
+            <input type="file" id="fileInput" onchange="uploadQuestions()" hidden>
+            <br>
+            <label for="fileInput" class="btn btn-blue">Upload JSON</label>
         </div>
     </div>
-
-
-    <div id="errorMessage" class="error-message hidden">File loading error: Invalid JSON format.</div>
 
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 

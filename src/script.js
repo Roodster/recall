@@ -63,12 +63,14 @@ function addOpenAnswer(questionId) {
     const answerId = new Date().getTime();
     container.insertAdjacentHTML('beforeend', `
         <div id="answer-${answerId}">
-            <input type="text" placeholder="Open answer" class="answer-option" oninput="updateQuestion(${questionId})">
-            <button onclick="deleteAnswer(${questionId}, ${answerId})">Delete</button>
-            <br>
+            <input type="text" placeholder="Open answer" class="answer-row" oninput="updateQuestion(${questionId})">
+            <button onclick="deleteAnswer(${questionId}, ${answerId})" class="btn btn-red btn-icon">
+                <i data-lucide="trash-2"></i>
+            </button>
         </div>
     `);
     container.classList.remove('hidden');
+    lucide.createIcons();
     updateQuestion(questionId);
 }
 
@@ -78,13 +80,17 @@ function addMultipleChoice(questionId) {
     const answerId = new Date().getTime();
     container.insertAdjacentHTML('beforeend', `
         <div id="answer-${answerId}">
-            <input type="checkbox" class="answer-option" onclick="updateQuestion(${questionId})">
+            <input type="checkbox" class="answer-row" onclick="updateQuestion(${questionId})">
             <input type="text" placeholder="Option text" class="option-text" oninput="updateQuestion(${questionId})">
-            <button onclick="deleteAnswer(${questionId}, ${answerId})">Delete</button>
+            <button onclick="deleteAnswer(${questionId}, ${answerId})" class="btn btn-red btn-icon">
+                <i data-lucide="trash-2"></i>
+            </button>
             <br>
         </div>
     `);
     container.classList.remove('hidden');
+    lucide.createIcons();
+
     updateQuestion(questionId);
 }
 
@@ -234,13 +240,15 @@ function addQuestion(questionId = null) {
     const existingQuestion = questions.find(q => q.id === id);
     
     if (!existingQuestion) {
-        questions.push({ id: id, text: '', answers: [], correct: false });
+        questions.push({ id: id, type: "question", text: '', answers: [], correct: false });
     }
     
     updateStats();
     
     return id;
 }
+
+
 
 function displayQuestions() {
     document.getElementById('questionsContainer').innerHTML = '';
@@ -258,9 +266,9 @@ function displayQuestions() {
         if (answersContainer) {
             q.answers.forEach(answer => {
                 if (typeof answer === 'object') {
-                    addMultipleChoiceWithValue(q.id, answer); // Ensure it's an object with `checked` and `text`
+                    addMultipleChoice(q.id, answer); // Ensure it's an object with `checked` and `text`
                 } else {
-                    addOpenAnswerWithValue(q.id, answer); // For simple text answers
+                    addOpenAnswer(q.id, answer); // For simple text answers
                 }
             });
 
@@ -321,10 +329,10 @@ function uploadQuestions() {
                 question.answers.forEach(answer => {
                     if (typeof answer === 'object') {
                         // It's a multiple choice answer
-                        addMultipleChoiceWithValue(question.id, answer);
+                        addMultipleChoice(question.id, answer);
                     } else {
                         // It's an open text answer
-                        addOpenAnswerWithValue(question.id, answer);
+                        addOpenAnswer(question.id, answer);
                     }
                 });
                 
@@ -349,35 +357,33 @@ function uploadQuestions() {
     reader.readAsText(file);
 }
 
-// Helper function to add multiple choice answer with existing value
-function addMultipleChoiceWithValue(questionId, answer) {
-    const container = document.getElementById(`answers-${questionId}`);
-    const answerId = new Date().getTime();
-    container.insertAdjacentHTML('beforeend', `
-        <div id="answer-${answerId}">
-            <input type="checkbox" class="answer-option" ${answer.checked ? 'checked' : ''} onclick="updateQuestion(${questionId})">
-            <input type="text" value="${answer.text}" placeholder="Option text" class="answer-row" oninput="updateQuestion(${questionId})">
-            <button onclick="deleteAnswer(${questionId}, ${answerId})" class="btn delete-btn btn-red btn-icon">
-                <i data-lucide="trash-2"></i>
-            </button>
-        </div>
-    `);
-    lucide.createIcons();
-    updateQuestion(questionId);
+
+
+
+
+
+
+
+
+
+/* ================================================== DARK MODE ================================================== */
+
+function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+    saveThemePreference();
 }
 
-// Helper function to add open answer with existing value
-function addOpenAnswerWithValue(questionId, answer) {
-    const container = document.getElementById(`answers-${questionId}`);
-    const answerId = new Date().getTime();
-    container.insertAdjacentHTML('beforeend', `
-        <div id="answer-${answerId}">
-            <input type="text" value="${answer}" placeholder="Open answer" class="answer-row" oninput="updateQuestion(${questionId})">
-            <button onclick="deleteAnswer(${questionId}, ${answerId})" class="btn btn-red btn-icon">
-                <i data-lucide="trash-2"></i>
-            </button>
-        </div>
-    `);
-    lucide.createIcons();
-    updateQuestion(questionId);
+function saveThemePreference() {
+    const isDarkMode = document.body.classList.contains("dark-mode");
+    localStorage.setItem("darkMode", isDarkMode ? "enabled" : "disabled");
 }
+
+function loadThemePreference() {
+    const darkMode = localStorage.getItem("darkMode");
+    if (darkMode === "enabled") {
+        document.body.classList.add("dark-mode");
+    }
+}
+
+// Load the theme preference on page load
+loadThemePreference();

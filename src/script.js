@@ -17,7 +17,7 @@ function addOpenAnswer(questionId) {
         <div id="answer-${answerId}" class="row align-items-center">
             <div class="col">
                 <i data-lucide="grip-vertical" class="drag-handle question-drag-handle"></i>
-                <textarea class="topic-title topic-question-answer" placeholder="Open answer" class="answer-row" oninput="updateQuestion(${questionId})"></textarea>
+                <textarea class="topic-answer topic-question-answer" placeholder="Open answer" class="answer-row" oninput="updateQuestion(${questionId})"></textarea>
             </div>
             <div class="col-auto d-flex align-items-center">
                 <button onclick="deleteAnswer(${questionId}, ${answerId})" class="btn btn-danger btn-sm">
@@ -571,3 +571,7 @@ function toggleAllAnswers() {
         toggleAnswers(match)
     });
   }
+
+  function adjustHeight(el){
+    el.style.height = (el.scrollHeight > el.clientHeight) ? (el.scrollHeight)+"px" : "60px";
+}

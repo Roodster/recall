@@ -1,59 +1,8 @@
-let questions = [];
+// import {test_html} from "mocks"
+
+let elements = [];
 let correctAnswers = 0;
 lucide.createIcons();
-
-document.addEventListener("DOMContentLoaded", () => {
-    const errorMessage = document.getElementById("errorMessage");
-
-    // Handle drag-and-drop events on the whole document
-    document.addEventListener("dragover", (event) => {
-        event.preventDefault(); // Prevent default to allow drop
-    });
-
-    document.addEventListener("drop", (event) => {
-        event.preventDefault();
-
-        const file = event.dataTransfer.files[0];
-        if (file && file.type === "application/json") {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const questions = JSON.parse(e.target.result);
-                    loadQuestions(questions);
-                    errorMessage.classList.add("hidden"); // Hide error message if successful
-                } catch (error) {
-                    showError("File loading error: Invalid JSON format.");
-                }
-            };
-            reader.readAsText(file);
-        } else {
-            showError("File loading error: Only JSON files are supported.");
-        }
-    });
-
-    // Display an error message
-    function showError(message) {
-        errorMessage.textContent = message;
-        errorMessage.classList.remove("hidden");
-    }
-
-    // Function to load questions (this should match your existing logic)
-    function loadQuestions(questions) {
-        // Ensure the questions array follows your format requirements
-        if (!Array.isArray(questions)) {
-            showError("File loading error: JSON structure is incorrect.");
-            return;
-        }
-
-        // Clear existing questions and populate the new ones
-        const questionsContainer = document.getElementById("questionsContainer");
-        questionsContainer.innerHTML = ""; // Clear existing questions
-        questions.forEach((question) => {
-            // Call your existing function to add questions dynamically
-            addQuestion(question);
-        });
-    }
-});
 
 
 
@@ -79,13 +28,18 @@ function addMultipleChoice(questionId) {
     const container = document.getElementById(`answers-${questionId}`);
     const answerId = new Date().getTime();
     container.insertAdjacentHTML('beforeend', `
-        <div id="answer-${answerId}">
-            <input type="checkbox" class="answer-row" onclick="updateQuestion(${questionId})">
-            <input type="text" placeholder="Option text" class="option-text" oninput="updateQuestion(${questionId})">
-            <button onclick="deleteAnswer(${questionId}, ${answerId})" class="btn btn-red btn-icon">
-                <i data-lucide="trash-2"></i>
-            </button>
-            <br>
+        <div id="answer-${answerId}" class="row align-items-center">
+            <div class="col-auto">
+                <input type="checkbox" class="answer-row" onclick="updateQuestion(${questionId})">
+            </div>
+            <div class="col-auto">
+                <input type="text" placeholder="Option text" class="option-text" oninput="updateQuestion(${questionId})">
+            </div>
+            <div class="col-auto">
+                <button onclick="deleteAnswer(${questionId}, ${answerId})" class="btn btn-danger btn-sm">
+                    <i data-lucide="trash-2"></i>
+                </button>
+            </div>
         </div>
     `);
     container.classList.remove('hidden');
@@ -101,44 +55,25 @@ function deleteAnswer(questionId, answerId) {
 
 function deleteQuestion(questionId) {
     document.getElementById(`question-${questionId}`).remove();
-    questions = questions.filter(q => q.id !== questionId);
+    elements = elements.filter(q => q.id !== questionId);
     updateStats();
 }
 
 function updateCorrectness(questionId, checkbox) {
-    const question = questions.find(q => q.id === questionId);
+    const question = elements.find(q => q.id === questionId);
     question.correct = checkbox.checked;
     updateStats();
 }
 
 // Update the stats display to show ratio
 function updateStats() {
-    const correctCount = questions.filter(q => q.correct).length;
-    const totalQuestions = questions.length;
-    const percentage = totalQuestions > 0 ? (correctCount / totalQuestions * 100).toFixed(2) : 0;
-    document.getElementById('statsText').textContent = `${correctCount}/${totalQuestions}`;
+    const correctCount = elements.filter(q => q.correct).length;
+    const totalelements = elements.length;
+    const percentage = totalelements > 0 ? (correctCount / totalelements * 100).toFixed(2) : 0;
+    document.getElementById('statsText').textContent = `${correctCount}/${totalelements}`;
     document.querySelector('.progress-bar').style.width = `${percentage}%`;
 }
 
-// Toggle eye icon when showing/hiding answers
-function toggleAnswers(questionId) {
-
-    const container = document.getElementById(`answers-${questionId}`);
-    const eyeIcon = document.getElementById(`eye-${questionId}`);
-    
-    // Toggle the display of the answers container
-    container.classList.toggle('hidden');
-    
-    // Update the icon based on visibility state
-    if (container.classList.contains('hidden')) {
-        eyeIcon.setAttribute('data-lucide', 'eye');
-    } else {
-        eyeIcon.setAttribute('data-lucide', 'eye-off');
-    }
-    
-    // Refresh icons to apply the updated `data-lucide` attribute
-    lucide.createIcons();
-}
 
 function updateQuestion(questionId) {
 
@@ -160,7 +95,7 @@ function updateQuestion(questionId) {
         }
     });
 
-    const question = questions.find(q => q.id === questionId);
+    const question = elements.find(q => q.id === questionId);
 
     if (question) {
         question.text = questionText.trim();
@@ -171,76 +106,54 @@ function updateQuestion(questionId) {
 
 }
 
-function downloadQuestions() {
-    try {
-        // Stringify the questions array with proper indentation for readability
-        const jsonData = JSON.stringify(questions, null, 2);
-
-        console.log(jsonData)
-        
-        // Create a Blob object from the JSON data
-        const blob = new Blob([jsonData], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        
-        // Create an anchor element and trigger the download
-        const downloadAnchor = document.createElement('a');
-        downloadAnchor.href = url;
-        downloadAnchor.download = "questions.json"; // File name for the download
-        document.body.appendChild(downloadAnchor);
-        downloadAnchor.click();
-        
-        // Clean up the created URL and anchor element
-        document.body.removeChild(downloadAnchor);
-        URL.revokeObjectURL(url);
-        
-        alert("Download initiated successfully!");
-    } catch (error) {
-        console.error("Error during the download process:", error);
-        alert("An error occurred while preparing the download.");
-    }
-}
-// Initialize Lucide icons
 
 // Modify your addQuestion function to use the new HTML structure
-function addQuestion(questionId = null) {
+function addTopic(topicId = null) {
 
-
-    const id = questionId || new Date().getTime();
-    const questionHTML = `
+    const id = topicId || new Date().getTime();
+    const topicHTML = `
+        
         <div class="question" id="question-${id}">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <button onclick="deleteQuestion(${id})" class="btn btn-red btn-icon">
-                    <i data-lucide="trash-2"></i>
-                </button>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <button onclick="toggleAnswers(${id})" class="btn btn-blue btn-icon">
-                        <i data-lucide="eye" id="eye-${id}"></i>
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <button onclick="deleteQuestion(${id})" class="btn btn-danger btn-sm">
+                        <i data-lucide="trash-2"></i>
                     </button>
-                    <input type="checkbox" class="correctness-checkbox" onchange="updateCorrectness(${id}, this)">
+                </div>
+                <div class="col">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button onclick="toggleAnswers(${id})" class="btn btn-primary btn-sm">
+                            <i data-lucide="eye" id="eye-${id}"></i>
+                        </button>
+                        <input type="checkbox" class="correctness-checkbox" onchange="updateCorrectness(${id}, this)">
+                    </div>
                 </div>
             </div>
-            <input type="text" placeholder="Enter your question" class="question-text" oninput="updateQuestion(${id})">
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <button onclick="addOpenAnswer(${id})" class="btn btn-blue">
-                    <i data-lucide="square"></i>
-                    Add Textbox
-                </button>
-                <button onclick="addMultipleChoice(${id})" class="btn btn-blue">
-                    <i data-lucide="check-square"></i>
-                    Add Checkbox
-                </button>
+            <div class="row">
+                <div class="col">
+                    <input type="text" placeholder="Enter your topic" class="question-text" oninput="updateQuestion(${id})">
+                </div>
             </div>
-            <div class="answers hidden" id="answers-${id}"></div>
+
+            <div class="row justify-content-center">  
+                <div class="col-auto">  
+                    <button onclick="addQuestion()" class="btn btn-primary add-question-btn">
+                        <i data-lucide="plus-circle"></i>
+                        Add Question
+                    </button>
+            </div>
+
         </div>
+
     `;
-    document.getElementById('questionsContainer').insertAdjacentHTML('beforeend', questionHTML);
+    document.getElementById('elementsContainer').insertAdjacentHTML('beforeend', topicHTML);
     lucide.createIcons();
     
     // Check if this is a new question or an existing one
-    const existingQuestion = questions.find(q => q.id === id);
+    const existingTopic = elements.find(q => q.id === id);
     
-    if (!existingQuestion) {
-        questions.push({ id: id, type: "question", text: '', answers: [], correct: false });
+    if (!existingTopic) {
+        elements.push({ id: id, type: "topic", text: ''});
     }
     
     updateStats();
@@ -249,10 +162,72 @@ function addQuestion(questionId = null) {
 }
 
 
+// Modify your addQuestion function to use the new HTML structure
+function addQuestion(questionId = null) {
 
-function displayQuestions() {
-    document.getElementById('questionsContainer').innerHTML = '';
-    questions.forEach(q => {
+
+    const id = questionId || new Date().getTime();
+    const questionHTML = `
+        
+        <div class="question" id="question-${id}">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <button onclick="deleteQuestion(${id})" class="btn btn-danger btn-sm">
+                        <i data-lucide="trash-2"></i>
+                    </button>
+                </div>
+                <div class="col">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button onclick="toggleAnswers(${id})" class="btn btn-primary btn-sm">
+                            <i data-lucide="eye" id="eye-${id}"></i>
+                        </button>
+                        <input type="checkbox" class="correctness-checkbox" onchange="updateCorrectness(${id}, this)">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input type="text" placeholder="Enter your question" class="question-text" oninput="updateQuestion(${id})">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <button onclick="addOpenAnswer(${id})" class="btn btn-primary btn-sm">
+                            <i data-lucide="square"></i>
+                            Add Textbox
+                        </button>
+                        <button onclick="addMultipleChoice(${id})" class="btn btn-primary btn-sm">
+                            <i data-lucide="check-square"></i>
+                            Add Checkbox
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="answers hidden" id="answers-${id}"></div>
+        </div>
+    `;
+    document.getElementById('elementsContainer').insertAdjacentHTML('beforeend', questionHTML);
+    lucide.createIcons();
+    
+    // Check if this is a new question or an existing one
+    const existingQuestion = elements.find(q => q.id === id);
+    
+    if (!existingQuestion) {
+        elements.push({ id: id, type: "question", text: '', answers: [], correct: false });
+    }
+    
+    updateStats();
+    
+    return id;
+}
+
+
+/* ============================================== DISPLAY METHODS ============================================== */
+
+function displayelements() {
+    document.getElementById('elementsContainer').innerHTML = '';
+    elements.forEach(q => {
         addQuestion(q.id);
         const questionElement = document.getElementById(`question-${q.id}`);
         if (!questionElement) return;
@@ -285,8 +260,61 @@ function displayQuestions() {
 }
 
 
+// Toggle eye icon when showing/hiding answers
+function toggleAnswers(questionId) {
 
-function uploadQuestions() {
+    const container = document.getElementById(`answers-${questionId}`);
+    const eyeIcon = document.getElementById(`eye-${questionId}`);
+    
+    // Toggle the display of the answers container
+    container.classList.toggle('hidden');
+    
+    // Update the icon based on visibility state
+    if (container.classList.contains('hidden')) {
+        eyeIcon.setAttribute('data-lucide', 'eye');
+    } else {
+        eyeIcon.setAttribute('data-lucide', 'eye-off');
+    }
+    
+    // Refresh icons to apply the updated `data-lucide` attribute
+    lucide.createIcons();
+}
+
+
+/* ======================================== DOWNLOAD / UPLOAD ======================================== */
+
+
+function downloadelements() {
+    try {
+        // Stringify the elements array with proper indentation for readability
+        const jsonData = JSON.stringify(elements, null, 2);
+
+        console.log(jsonData)
+        
+        // Create a Blob object from the JSON data
+        const blob = new Blob([jsonData], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        
+        // Create an anchor element and trigger the download
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.href = url;
+        downloadAnchor.download = "elements.json"; // File name for the download
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        
+        // Clean up the created URL and anchor element
+        document.body.removeChild(downloadAnchor);
+        URL.revokeObjectURL(url);
+        
+        alert("Download initiated successfully!");
+    } catch (error) {
+        console.error("Error during the download process:", error);
+        alert("An error occurred while preparing the download.");
+    }
+}
+
+
+function uploadelements() {
     const fileInput = document.getElementById('fileInput');
     const file = fileInput.files[0];
     if (!file) {
@@ -297,11 +325,11 @@ function uploadQuestions() {
     const reader = new FileReader();
     reader.onload = function(e) {
         try {
-            questions = JSON.parse(e.target.result); // Update the questions array
-            document.getElementById('questionsContainer').innerHTML = ''; // Clear existing questions
+            elements = JSON.parse(e.target.result); // Update the elements array
+            document.getElementById('elementsContainer').innerHTML = ''; // Clear existing elements
             
             // Display each question
-            questions.forEach(question => {
+            elements.forEach(question => {
                 // First create the question container
                 addQuestion(question.id);
                 
@@ -351,7 +379,7 @@ function uploadQuestions() {
             
         } catch (error) {
             console.error('Error parsing JSON:', error);
-            alert('Error loading questions. Please check the file format.');
+            alert('Error loading elements. Please check the file format.');
         }
     };
     reader.readAsText(file);

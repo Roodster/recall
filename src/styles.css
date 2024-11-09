@@ -1,6 +1,6 @@
-
 /* Base Variables for Light Theme */
 :root {
+    /* Original light theme variables */
     --background-color: #f5f5f5;
     --text-color: #333;
     --header-bg-color: #ffffff;
@@ -14,10 +14,18 @@
     --button-red-bg-color: #f44336;
     --checkbox-border-color: #ddd;
     --checkbox-checked-bg-color: #4CAF50;
+    
+    /* Additional light theme variables */
+    --card-bg: #f8f9fa;
+    --border-color: #dee2e6;
+    --input-bg: #ffffff;
+    --input-text: #333333;
+    --btn-default: #0d6efd;
 }
 
-/* Dark Mode Variables */
-.dark-mode {
+/* Dark Theme Variables */
+[data-theme="dark"] {
+    /* Original dark theme variables */
     --background-color: #333;
     --text-color: #f5f5f5;
     --header-bg-color: #444;
@@ -31,54 +39,326 @@
     --button-red-bg-color: #c62828;
     --checkbox-border-color: #bbb;
     --checkbox-checked-bg-color: #66bb6a;
+    
+    /* Additional dark theme variables */
+    --card-bg: #333333;
+    --border-color: #444444;
+    --input-bg: #2b2b2b;
+    --input-text: #ffffff;
+    --btn-default: #0d6efd;
 }
 
+/* Base Styles */
 * {
     box-sizing: border-box;
     font-family: Helvetica, Arial, sans-serif;
 }
 
-.error-message {
-    background-color: var(--error-bg-color);
-    color: var(--error-text-color);
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+/* Components */
+.topic-container, 
+.question {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: var(--card-bg);
 }
 
-.progress-container {
-    background: var(--progress-bg-color);
+.header-row {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999; /* Ensure it's above other content */
+    padding: 10px; /* Add padding for spacing */
+    background-color: var(--background-color);
+
 }
 
-.progress-bar {
-    background: var(--progress-bar-color);
+
+.topic-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+
+
+.topic-title {
+    flex-grow: 1;
+    padding: 5px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    color: var(--input-text);
+}
+
+.topic-title:focus {
+    border-color: #86b7fe;
+    outline: none;
+}
+
+.topic-title, .topic-question-answer {
+    width: 83.5%; /* Ensure the textarea fills the available width */
+    box-sizing: border-box; /* Include padding and border in the width */
+  }
+
+
+.topic-question {
+    width: 90%;
+
+}
+
+.topic-question-answer{
+    width: 79%;
+
 }
 
 .question {
-    background: var(--question-bg-color);
-    border: 1px solid var(--question-border-color);
+    background: var(--card-bg);
 }
 
-.question input[type="text"], .answer-row input[type="text"] {
-    border: 1px solid var(--question-border-color);
-}
 
-.btn-blue {
-    background: var(--button-blue-bg-color);
-    color: white;
-}
-
-.btn-red {
-    background: var(--button-red-bg-color);
-    color: white;
-}
-
-.correctness-checkbox {
-    border-color: var(--checkbox-border-color);
-}
-
-.correctness-checkbox:checked {
-    background: var(--checkbox-checked-bg-color);
-    border-color: var(--checkbox-checked-bg-color);
+.btn-icon {
+    padding: 0.25rem 0.5rem;
 }
 
 .hidden {
     display: none;
+}
+
+.nav-button {
+    color: #e0e0e0;
+}
+
+.answer-row {
+    margin-bottom: 10px;
+}
+
+/* Container for the progress bar and text */
+.progress-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%; /* Adjust this to control the total width of the progress bar */
+    margin: auto;
+}
+
+/* Progress bar wrapper */
+.progress {
+    width: 100%; /* Full width within the container */
+    background-color: var(--progress-bg-color, #e0e0e0);
+    border-radius: 4px;
+    overflow: hidden;
+    height: 20px; /* Adjust height as desired */
+    margin-bottom: 5px;
+}
+
+/* Actual progress fill */
+.progress-bar {
+    background-color: var(--progress-bar-color, #4caf50);
+    height: 100%;
+    width: 0%; /* Initial width, will be updated dynamically */
+    transition: width 0.3s ease;
+}
+
+/* Optional text for display */
+.progress-text {
+    font-size: 14px;
+    text-align: center;
+}
+
+.add-topic {
+    vertical-align: bottom;
+}
+/* Form Elements */
+.form-control {
+    background-color: var(--input-bg);
+    border-color: var(--border-color);
+    color: var(--input-text);
+}
+
+.input-group-text {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: var(--button-blue-bg-color);
+    border-color: var(--button-blue-bg-color);
+}
+
+.btn-danger {
+    background-color: var(--button-red-bg-color);
+    border-color: var(--button-red-bg-color);
+}
+
+/* Dark Mode Specific Overrides */
+[data-theme="dark"] .btn-primary:hover {
+    background-color: var(--button-blue-bg-color);
+    filter: brightness(1.1);
+}
+
+[data-theme="dark"] .btn-danger:hover {
+    background-color: var(--button-red-bg-color);
+    filter: brightness(1.1);
+}
+
+[data-theme="dark"] .form-control:focus {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border-color: #86b7fe;
+}
+
+
+
+* Drag handle styles */
+.drag-handle {
+    cursor: grab;
+    padding: 8px;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+/* Question container styles */
+.questions-container {
+    min-height: 10px; /* Ensures container is droppable when empty */
+}
+
+.question {
+    position: relative;
+    background: var(--question-bg-color);
+    border: 1px solid var(--question-border-color);
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.2s ease;
+}
+
+/* Drag and drop states */
+.question-ghost {
+    opacity: 0.5;
+    background: var(--card-bg);
+}
+
+.question-chosen {
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.question-drag {
+    opacity: 0.8;
+}
+
+/* Animation for the drag handle icon on hover */
+.drag-handle:hover i {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+/* Ensure the question stays above other elements while dragging */
+.sortable-drag {
+    z-index: 1000;
+}
+
+.answer-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 80%;
+}
+
+.answer-container textarea {
+    flex-grow: 1;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: right;
+}
+
+
+/* ================================================== checkbox ================================================== */
+.checkbox-btn {
+    width: 35px; /* Adjust size as needed */
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5%; /* Makes it circular */
+}
+
+.checkbox-btn .icon-check,
+.checkbox-btn .icon-x {
+    display: none;
+}
+
+.checkbox-btn[data-state="correct"] .icon-check {
+    display: block;
+}
+
+.checkbox-btn[data-state="wrong"] .icon-x {
+    display: block;
+}
+
+
+/* ================================== SIDE BAR ======================================= */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #333;
+    color: white;
+    padding-top: 20px;
+    overflow-y: auto;
+    /* transform: translateX(100%); */
+    transition: transform 0.3s ease;
+    z-index: 1000;
+}
+
+.sidebar.open {
+    transform: translateX(0);
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+}
+
+.sidebar a:hover {
+    background-color: #575757;
+}
+
+.close-btn {
+    font-size: 24px;
+    margin-left: 10px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+
+.toggle-button-container {
+    position: fixed;
+    bottom: 50px;
+    left: 20px; /* Adjust the left position as needed */
 }

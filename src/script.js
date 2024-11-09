@@ -48,8 +48,8 @@ function updateStats() {
         }
     });
 
-    const percentage = totalQuestions > 0 ? (correctCount / totalQuestions * 100).toFixed(2) : 0;
-    document.getElementById('statsText').textContent = `${correctCount}/${totalQuestions}`;
+    const percentage = totalQuestions > 0 ? (correctCount / totalQuestions * 100).toFixed(1) : 0;
+    document.getElementById('statsText').textContent = `${percentage}%`;
     document.querySelector('.progress-bar').style.width = `${percentage}%`;
     updateProgressBar(correctCount, totalQuestions)
 }
